@@ -1,0 +1,109 @@
+#include "lcd/lcd.h"
+#include "fatfs/tf_card.h"
+#include <string.h>
+
+unsigned char image[12800];
+FATFS fs;
+
+void init_uart0(void)
+{	
+	/* enable GPIO clock */
+    rcu_periph_clock_enable(RCU_GPIOA);
+    /* enable USART clock */
+    rcu_periph_clock_enable(RCU_USART0);
+
+    /* connect port to USARTx_Tx */
+    gpio_init(GPIOA, GPIO_MODE_AF_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_9);
+    /* connect port to USARTx_Rx */
+    gpio_init(GPIOA, GPIO_MODE_IN_FLOATING, GPIO_OSPEED_50MHZ, GPIO_PIN_10);
+
+	/* USART configure */
+    usart_deinit(USART0);
+    usart_baudrate_set(USART0, 115200U);
+    usart_word_length_set(USART0, USART_WL_8BIT);
+    usart_stop_bit_set(USART0, USART_STB_1BIT);
+    usart_parity_config(USART0, USART_PM_NONE);
+    usart_hardware_flow_rts_config(USART0, USART_RTS_DISABLE);
+    usart_hardware_flow_cts_config(USART0, USART_CTS_DISABLE);
+    usart_receive_config(USART0, USART_RECEIVE_ENABLE);
+    usart_transmit_config(USART0, USART_TRANSMIT_ENABLE);
+    usart_enable(USART0);
+
+    usart_interrupt_enable(USART0, USART_INT_RBNE);
+}
+
+int main(void)
+{	
+    u8 i,m;
+    float t=0;
+    int offset = 0;
+    uint64_t start_mtime, delta_mtime;
+    FIL fil;
+
+    FRESULT fr;     /* FatFs return code */
+    UINT br, bw;
+
+    rcu_periph_clock_enable(RCU_GPIOA);
+    rcu_periph_clock_enable(RCU_GPIOC);
+    gpio_init(GPIOC, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_13);
+    gpio_init(GPIOA, GPIO_MODE_OUT_PP, GPIO_OSPEED_50MHZ, GPIO_PIN_1|GPIO_PIN_2);
+
+    init_uart0();
+
+    Lcd_Init();			// init OLED
+    LCD_Clear(WHITE);
+    BACK_COLOR=WHITE;
+
+    LEDR(1);
+    LEDG(1);
+    LEDB(1);
+    fr = f_mount(&fs, "", 1);
+
+    while(1)
+    {
+        offset = 0;
+        fr = f_open(&fil, "logo.bin", FA_READ);
+        if (fr) printf("open error: %d!\n\r", (int)fr);
+        f_lseek(&fil, offset);
+        fr = f_read(&fil, image, sizeof(image), &br);
+        LCD_ShowPicture(0,0,159,39);
+        offset += 12800;
+        LEDB_TOG;
+        f_lseek(&fil, offset);
+        fr = f_read(&fil, image, sizeof(image), &br);
+        LCD_ShowPicture(0,40,159,79);
+        LEDB_TOG;
+        delay_1ms(1500);
+        f_close(&fil);
+
+        fr = f_open(&fil, "bmp.bin", FA_READ);
+        if (fr) printf("open error: %d!\n\r", (int)fr);
+        offset = 0;
+
+        for (int i=0; i<2189;i++)
+        {
+            fr = f_read(&fil, image, sizeof(image), &br);
+            LCD_ShowPicture(0,0,159,39);
+            offset += 12800;
+            f_lseek(&fil, offset);
+            LEDB_TOG;
+            fr = f_read(&fil, image, sizeof(image), &br);
+            LCD_ShowPicture(0,40,159,79);
+            offset += 12800;
+            f_lseek(&fil, offset);
+            LEDB_TOG;
+        }
+
+        /* Close the file */
+        f_close(&fil);
+    }
+}
+
+int _put_char(int ch)
+{
+    usart_data_transmit(USART0, (uint8_t) ch );
+    while ( usart_flag_get(USART0, USART_FLAG_TBE)== RESET){
+    }
+
+    return ch;
+}
