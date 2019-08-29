@@ -37,7 +37,6 @@ int main(void)
     uint8_t mount_is_ok = 1; /* 0: mount successful ; 1: mount failed */
     int offset = 0;
     FIL fil;
-
     FRESULT fr;     /* FatFs return code */
     UINT br;
 
@@ -55,15 +54,16 @@ int main(void)
     LEDR(1);
     LEDG(1);
     LEDB(1);
+
     fr = f_mount(&fs, "", 1);
     if (fr == 0)
         mount_is_ok = 0;
     else
         mount_is_ok = 1;
 
-    while(1)
+    if (mount_is_ok == 0)
     {
-        if (mount_is_ok == 0)
+        while(1)
         {
             offset = 0;
             fr = f_open(&fil, "logo.bin", FA_READ);
@@ -101,10 +101,17 @@ int main(void)
             /* Close the file */
             f_close(&fil);
         }
-        else
+    }
+    else
+    {
+        while (1)
         {
             LEDR_TOG;
-            delay_1ms(500);
+            delay_1ms(200);
+            LEDG_TOG;
+            delay_1ms(200);
+            LEDB_TOG;
+            delay_1ms(200);
         }
     }
 }
