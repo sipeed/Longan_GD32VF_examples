@@ -33,15 +33,13 @@ void init_uart0(void)
 }
 
 int main(void)
-{	
-    u8 i,m;
-    float t=0;
+{
+    uint8_t mount_is_ok = 1; /* 0: mount successful ; 1: mount failed */
     int offset = 0;
-    uint64_t start_mtime, delta_mtime;
     FIL fil;
 
     FRESULT fr;     /* FatFs return code */
-    UINT br, bw;
+    UINT br;
 
     rcu_periph_clock_enable(RCU_GPIOA);
     rcu_periph_clock_enable(RCU_GPIOC);
@@ -58,44 +56,56 @@ int main(void)
     LEDG(1);
     LEDB(1);
     fr = f_mount(&fs, "", 1);
+    if (fr == 0)
+        mount_is_ok = 0;
+    else
+        mount_is_ok = 1;
 
     while(1)
     {
-        offset = 0;
-        fr = f_open(&fil, "logo.bin", FA_READ);
-        if (fr) printf("open error: %d!\n\r", (int)fr);
-        f_lseek(&fil, offset);
-        fr = f_read(&fil, image, sizeof(image), &br);
-        LCD_ShowPicture(0,0,159,39);
-        offset += 12800;
-        LEDB_TOG;
-        f_lseek(&fil, offset);
-        fr = f_read(&fil, image, sizeof(image), &br);
-        LCD_ShowPicture(0,40,159,79);
-        LEDB_TOG;
-        delay_1ms(1500);
-        f_close(&fil);
-
-        fr = f_open(&fil, "bmp.bin", FA_READ);
-        if (fr) printf("open error: %d!\n\r", (int)fr);
-        offset = 0;
-
-        for (int i=0; i<2189;i++)
+        if (mount_is_ok == 0)
         {
+            offset = 0;
+            fr = f_open(&fil, "logo.bin", FA_READ);
+            if (fr) printf("open error: %d!\n\r", (int)fr);
+            f_lseek(&fil, offset);
             fr = f_read(&fil, image, sizeof(image), &br);
             LCD_ShowPicture(0,0,159,39);
             offset += 12800;
-            f_lseek(&fil, offset);
             LEDB_TOG;
+            f_lseek(&fil, offset);
             fr = f_read(&fil, image, sizeof(image), &br);
             LCD_ShowPicture(0,40,159,79);
-            offset += 12800;
-            f_lseek(&fil, offset);
             LEDB_TOG;
-        }
+            delay_1ms(1500);
+            f_close(&fil);
 
-        /* Close the file */
-        f_close(&fil);
+            fr = f_open(&fil, "bmp.bin", FA_READ);
+            if (fr) printf("open error: %d!\n\r", (int)fr);
+            offset = 0;
+
+            for (int i=0; i<2189;i++)
+            {
+                fr = f_read(&fil, image, sizeof(image), &br);
+                LCD_ShowPicture(0,0,159,39);
+                offset += 12800;
+                f_lseek(&fil, offset);
+                LEDB_TOG;
+                fr = f_read(&fil, image, sizeof(image), &br);
+                LCD_ShowPicture(0,40,159,79);
+                offset += 12800;
+                f_lseek(&fil, offset);
+                LEDB_TOG;
+            }
+
+            /* Close the file */
+            f_close(&fil);
+        }
+        else
+        {
+            LEDR_TOG;
+            delay_1ms(500);
+        }
     }
 }
 
