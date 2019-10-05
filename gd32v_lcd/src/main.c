@@ -104,6 +104,11 @@ int main(void)
     }
     else
     {
+        LCD_ShowString(24,  0, (u8 *)("no card found!"), BLACK);
+        LCD_ShowString(24, 16, (u8 *)("no card found!"), BLUE);
+        LCD_ShowString(24, 32, (u8 *)("no card found!"), BRED);
+        LCD_ShowString(24, 48, (u8 *)("no card found!"), GBLUE);
+        LCD_ShowString(24, 64, (u8 *)("no card found!"), RED);
         while (1)
         {
             LEDR_TOG;

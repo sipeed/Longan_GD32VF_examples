@@ -107,24 +107,6 @@ void rcvr_spi_multi (
 	UINT btr		/* Number of bytes to receive (even number) */
 )
 {
-	// WORD d;
-
-    // SPI_CTL0(SPI1) = (SPI_CTL0(SPI1) & ~0x800) | 0x800;  /* Put SPI into 16-bit mode */
-
-	// spi_i2s_data_transmit(SPI1, 0xFFFF);		/* Start the first SPI transaction */
-	// btr -= 2;
-	// do {					/* Receive the data block into buffer */
-	// 	while(RESET == spi_i2s_flag_get(SPI1, SPI_FLAG_RBNE));	/* Wait for end of the SPI transaction */
-	// 	d = spi_i2s_data_receive(SPI1);						/* Get received word */
-	// 	spi_i2s_data_transmit(SPI1, 0xFFFF);					/* Start next transaction */
-	// 	buff[1] = d; buff[0] = d >> 8; 		/* Store received data */
-	// 	buff += 2;
-	// } while (btr -= 2);
-	// while(RESET == spi_i2s_flag_get(SPI1, SPI_FLAG_RBNE));		/* Wait for end of the SPI transaction */
-	// d = spi_i2s_data_receive(SPI1);							/* Get last word received */
-	// buff[1] = d; buff[0] = d >> 8;			/* Store it */
-
-	// SPI_CTL0(SPI1) = (SPI_CTL0(SPI1) & ~0x800) | 0x00;	/* Put SPI into 8-bit mode */
 	do
 	{
 		*buff = xchg_spi(0xff);
