@@ -235,22 +235,26 @@ void Lcd_Init(void)
 	delay_1ms(20);
 	OLED_BLK_Set();
 
-	LCD_WR_REG(0x11); 
+	LCD_WR_REG(0x11);	// turn off sleep mode
 	delay_1ms(100);
 
-	LCD_WR_REG(0x21); 
+	LCD_WR_REG(0x21);	// display inversion mode
 
-	LCD_WR_REG(0xB1); 
-	LCD_WR_DATA8(0x05);
-	LCD_WR_DATA8(0x3A);
-	LCD_WR_DATA8(0x3A);
+	LCD_WR_REG(0xB1);	// Set the frame frequency of the full colors normal mode
+						// Frame rate=fosc/((RTNA x 2 + 40) x (LINE + FPA + BPA +2))
+						// fosc = 850kHz
+	LCD_WR_DATA8(0x05);	// RTNA
+	LCD_WR_DATA8(0x3A);	// FPA
+	LCD_WR_DATA8(0x3A);	// BPA
 
-	LCD_WR_REG(0xB2);
-	LCD_WR_DATA8(0x05);
-	LCD_WR_DATA8(0x3A);
-	LCD_WR_DATA8(0x3A);
+	LCD_WR_REG(0xB2);	// Set the frame frequency of the Idle mode
+						// Frame rate=fosc/((RTNB x 2 + 40) x (LINE + FPB + BPB +2))
+						// fosc = 850kHz
+	LCD_WR_DATA8(0x05);	// RTNB
+	LCD_WR_DATA8(0x3A);	// FPB
+	LCD_WR_DATA8(0x3A);	// BPB
 
-	LCD_WR_REG(0xB3); 
+	LCD_WR_REG(0xB3);	// Set the frame frequency of the Partial mode/ full colors
 	LCD_WR_DATA8(0x05);  
 	LCD_WR_DATA8(0x3A);
 	LCD_WR_DATA8(0x3A);
@@ -320,8 +324,8 @@ void Lcd_Init(void)
 	LCD_WR_DATA8(0x0E);
 	LCD_WR_DATA8(0x10);
 
-	LCD_WR_REG(0x3A); 
-	LCD_WR_DATA8(0x05);
+	LCD_WR_REG(0x3A);	// define the format of RGB picture data
+	LCD_WR_DATA8(0x05);	// 16-bit/pixel
 
 	LCD_WR_REG(0x36);
 	if(USE_HORIZONTAL==0)LCD_WR_DATA8(0x08);
@@ -329,9 +333,8 @@ void Lcd_Init(void)
 	else if(USE_HORIZONTAL==2)LCD_WR_DATA8(0x78);
 	else LCD_WR_DATA8(0xA8);
 
-	LCD_WR_REG(0x29); 
-} 
-
+	LCD_WR_REG(0x29);	// Display On
+}
 
 /******************************************************************************
       函数说明：LCD清屏函数
