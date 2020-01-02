@@ -1,7 +1,7 @@
 #include "lcd/lcd.h"
 #include "lcd/oledfont.h"
 #include "lcd/bmp.h"
-u16 BACK_COLOR;   //背景色
+u16 BACK_COLOR;   //Background color
 
 
 /******************************************************************************
@@ -47,7 +47,7 @@ void LCD_Writ_Bus(u8 dat)
 ******************************************************************************/
 void LCD_WR_DATA8(u8 dat)
 {
-	OLED_DC_Set();//写数据
+	OLED_DC_Set();//Write data
 	LCD_Writ_Bus(dat);
 }
 
@@ -59,7 +59,7 @@ void LCD_WR_DATA8(u8 dat)
 ******************************************************************************/
 void LCD_WR_DATA(u16 dat)
 {
-	OLED_DC_Set();//写数据
+	OLED_DC_Set();//Write data
 	LCD_Writ_Bus(dat>>8);
 	LCD_Writ_Bus(dat);
 }
@@ -72,7 +72,7 @@ void LCD_WR_DATA(u16 dat)
 ******************************************************************************/
 void LCD_WR_REG(u8 dat)
 {
-	OLED_DC_Clr();//写命令
+	OLED_DC_Clr();//Write command
 	LCD_Writ_Bus(dat);
 }
 
@@ -87,43 +87,43 @@ void LCD_Address_Set(u16 x1,u16 y1,u16 x2,u16 y2)
 {
 	if(USE_HORIZONTAL==0)
 	{
-		LCD_WR_REG(0x2a);//列地址设置
+		LCD_WR_REG(0x2a);//Column address settings
 		LCD_WR_DATA(x1+26);
 		LCD_WR_DATA(x2+26);
-		LCD_WR_REG(0x2b);//行地址设置
+		LCD_WR_REG(0x2b);//Row address setting
 		LCD_WR_DATA(y1+1);
 		LCD_WR_DATA(y2+1);
-		LCD_WR_REG(0x2c);//储存器写
+		LCD_WR_REG(0x2c);//Memory write
 	}
 	else if(USE_HORIZONTAL==1)
 	{
-		LCD_WR_REG(0x2a);//列地址设置
+		LCD_WR_REG(0x2a);//Column address settings
 		LCD_WR_DATA(x1+26);
 		LCD_WR_DATA(x2+26);
-		LCD_WR_REG(0x2b);//行地址设置
+		LCD_WR_REG(0x2b);//Row address setting
 		LCD_WR_DATA(y1+1);
 		LCD_WR_DATA(y2+1);
-		LCD_WR_REG(0x2c);//储存器写
+		LCD_WR_REG(0x2c);//Memory write
 	}
 	else if(USE_HORIZONTAL==2)
 	{
-		LCD_WR_REG(0x2a);//列地址设置
+		LCD_WR_REG(0x2a);//Column address settings
 		LCD_WR_DATA(x1+1);
 		LCD_WR_DATA(x2+1);
-		LCD_WR_REG(0x2b);//行地址设置
+		LCD_WR_REG(0x2b);//Row address setting
 		LCD_WR_DATA(y1+26);
 		LCD_WR_DATA(y2+26);
-		LCD_WR_REG(0x2c);//储存器写
+		LCD_WR_REG(0x2c);//Memory write
 	}
 	else
 	{
-		LCD_WR_REG(0x2a);//列地址设置
+		LCD_WR_REG(0x2a);//Column address settings
 		LCD_WR_DATA(x1+1);
 		LCD_WR_DATA(x2+1);
-		LCD_WR_REG(0x2b);//行地址设置
+		LCD_WR_REG(0x2b);//Row address setting
 		LCD_WR_DATA(y1+26);
 		LCD_WR_DATA(y2+26);
-		LCD_WR_REG(0x2c);//储存器写
+		LCD_WR_REG(0x2c);//Memory write
 	}
 }
 
