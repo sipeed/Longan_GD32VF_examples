@@ -649,7 +649,7 @@ void LCD_ShowNum1(u16 x,u16 y,float num,u8 len,u16 color)
 
 
 /******************************************************************************
-	   Function description: display 40x40 picture
+	   Function description: display 160x40 16bit (RGB565) picture
        Entry data: x, y starting point coordinates
        Return value: None
 ******************************************************************************/
