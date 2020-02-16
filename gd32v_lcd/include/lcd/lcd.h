@@ -5,7 +5,7 @@
 #include "stdlib.h"	
 #include "gd32vf103_gpio.h"
 
-#define USE_HORIZONTAL 2  //设置横屏或者竖屏显示 0或1为竖屏 2或3为横屏
+#define USE_HORIZONTAL 2  //Set horizontal or vertical screen display 0 or 1 for vertical screen 2 or 3 for horizontal screen
 #define HAS_BLK_CNTL    0
 
 #if USE_HORIZONTAL==0||USE_HORIZONTAL==1
@@ -78,10 +78,10 @@ typedef unsigned long u32;
 #define OLED_BLK_Set()
 #endif
 
-#define OLED_CMD  0	//写命令
-#define OLED_DATA 1	//写数据
+#define OLED_CMD  0	//Write command
+#define OLED_DATA 1	//Write data
 
-extern  u16 BACK_COLOR;   //背景色
+extern  u16 BACK_COLOR;   //Background color
 extern unsigned char image[12800];
 
 void LCD_Writ_Bus(u8 dat);
@@ -107,7 +107,7 @@ void LCD_ShowPicture(u16 x1,u16 y1,u16 x2,u16 y2);
 void LCD_ShowLogo(void);
 
 
-//画笔颜色
+//Brush color
 #define WHITE         	 0xFFFF
 #define BLACK         	 0x0000	  
 #define BLUE           	 0x001F  
@@ -119,21 +119,21 @@ void LCD_ShowLogo(void);
 #define GREEN         	 0x07E0
 #define CYAN          	 0x7FFF
 #define YELLOW        	 0xFFE0
-#define BROWN 			 0XBC40 //棕色
-#define BRRED 			 0XFC07 //棕红色
-#define GRAY  			 0X8430 //灰色
-//GUI颜色
+#define BROWN 			 0XBC40 //brown
+#define BRRED 			 0XFC07 //maroon
+#define GRAY  			 0X8430 //gray
+//GUI color
 
-#define DARKBLUE      	 0X01CF	//深蓝色
-#define LIGHTBLUE      	 0X7D7C	//浅蓝色  
-#define GRAYBLUE       	 0X5458 //灰蓝色
-//以上三色为PANEL的颜色 
+#define DARKBLUE      	 0X01CF	//navy blue
+#define LIGHTBLUE      	 0X7D7C	//light blue 
+#define GRAYBLUE       	 0X5458 //gray blue
+//The above three colors are the colors of PANEL
  
-#define LIGHTGREEN     	 0X841F //浅绿色
-#define LGRAY 			     0XC618 //浅灰色(PANNEL),窗体背景色
+#define LIGHTGREEN     	 0X841F //light green
+#define LGRAY 			     0XC618 //Light gray (PANNEL), form background color
 
-#define LGRAYBLUE        0XA651 //浅灰蓝色(中间层颜色)
-#define LBBLUE           0X2B12 //浅棕蓝色(选择条目的反色)
+#define LGRAYBLUE        0XA651 //Light gray blue (middle layer color)
+#define LBBLUE           0X2B12 //Light brown blue (inverted color of selected item)
 
 
 					  		 
